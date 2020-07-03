@@ -1,0 +1,27 @@
+{
+    "name": "xelf",
+    "version": "1.0.0",
+    "description": "xelf - A Flex Box Layout Builder",
+    "main": "scripts.js",
+    "scripts": {
+        "css": "node-sass src/scss/styles.scss -o css",
+        "tsc": "tsc --project tsconfig.json",
+        "tsc:watch": "tsc --project tsconfig.json -w",
+        "css:watch": "npm run css && node-sass src/scss/styles.scss -wo css",
+        "watch": "npm run css:watch & npm run tsc:watch",
+        "start": "http-server -o | npm run watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/iambriansreed/xelf.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/iambriansreed/xelf/issues"
+    },
+    "homepage": "https://github.com/iambriansreed/xelf#readme",
+    "dependencies": {
+        "node-sass": "^4.12.0"
+    }
+}

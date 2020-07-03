@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Xelf - Flex Layout Builder</title>
+        <meta name="description" content="Xelf - Flex Layout Builder">
+        <meta name="author" content="iambriansreed">
+        <link rel="stylesheet" href="css/styles.css?v=1.0">
+    </head>
+
+    <body>
+        <header class="toolbar" id="toolbar" data-element-selected="false">
+            <div class="no-element-selected">No Element Selected</div>
+            <div class="edit-options">
+                <button type="button" value="add-child">Add Child</button>
+                <button type="button" value="parent">Parent</button>
+                <div class="btn-group" id="flex-direction-toggle">
+                    <button type="button" value="row">Row</button>
+                    <button type="button" value="column">Column</button>
+                    <input type="hidden" name="flexDirection" />
+                </div>
+                <input type="number" name="flexGrow" placeholder="Flex Grow" title="Flex Grow" class="sm" />
+                <input type="text" name="flexBasis" placeholder="Flex Basis" title="Flex Basis" />
+                <input type="text" name="className" placeholder="Name" title="Name" />
+                <button type="button" value="delete">Delete</button>
+            </div>
+            <button type="button" value="export">Export</button>
+        </header>
+        <main id="base" class="flex-item" data-ref="base" data-classname="Root"></main>
+        <footer class="status" id="status"></footer>
+        <textarea data-copy-pasta></textarea>
+        <script src="js/scripts.js"></script>
+    </body>
+
+</html>

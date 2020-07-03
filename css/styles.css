@@ -1,0 +1,202 @@
+body main.flex-item {
+  background-image: linear-gradient(45deg, #eee 25%, transparent 25%), linear-gradient(-45deg, #eee 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #eee 75%), linear-gradient(-45deg, transparent 75%, #eee 75%);
+  background-size: 50px 50px;
+  background-position: 0 0, 0 25px, 25px -25px, -25px 0px;
+  margin: 0;
+  padding: 0; }
+
+body, body .toolbar button,
+body .toolbar input, body .status span button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.4; }
+
+* {
+  user-select: none; }
+
+html {
+  height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  margin: 0; }
+  body [data-copy-pasta] {
+    width: 1px;
+    height: 1px;
+    border: none;
+    position: fixed;
+    opacity: 0;
+    z-index: 1000; }
+  body .toolbar {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 0;
+    position: relative;
+    z-index: 4;
+    display: flex; }
+    body .toolbar button,
+    body .toolbar input {
+      font-weight: 500;
+      border: none;
+      color: #fff;
+      border-radius: 7px;
+      box-sizing: border-box;
+      line-height: 1.5;
+      margin: 0.3rem; }
+    body .toolbar input {
+      padding: 0.25rem 0.7rem 0.25rem;
+      background-color: #fff;
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #111;
+      width: 7rem; }
+      body .toolbar input.sm {
+        width: 3rem; }
+    body .toolbar button {
+      padding-left: 1.15rem;
+      padding-right: 1.15rem;
+      padding-top: 0.45rem;
+      padding-bottom: 0.35rem;
+      display: inline-block;
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      border-color: rgba(255, 255, 255, 0.5); }
+      body .toolbar button[data-selected] {
+        background-color: rgba(0, 0, 0, 0.2); }
+        body .toolbar button[data-selected]:focus {
+          outline: none; }
+      body .toolbar button[data-select] {
+        padding-right: 24px;
+        position: relative; }
+        body .toolbar button[data-select]:before {
+          content: '';
+          position: absolute;
+          right: 7px;
+          top: 9px;
+          background-image: url(/chevron-down.svg);
+          background-repeat: no-repeat;
+          background-position: right center;
+          background-size: 100% auto;
+          height: 12px;
+          width: 12px;
+          opacity: 0.7; }
+        body .toolbar button[data-select] ul,
+        body .toolbar button[data-select] input {
+          display: none; }
+        body .toolbar button[data-select]:focus ul {
+          display: block;
+          position: absolute;
+          top: 30px;
+          right: 0;
+          background-color: #444;
+          border-color: #444;
+          margin: 0;
+          padding: 0; }
+          body .toolbar button[data-select]:focus ul li {
+            list-style: none;
+            padding: 4px 10px; }
+            body .toolbar button[data-select]:focus ul li:hover {
+              background-color: rgba(255, 255, 255, 0.2); }
+    body .toolbar[data-element-selected='false'] .no-element-selected {
+      display: block; }
+    body .toolbar[data-element-selected='false'] .edit-options {
+      display: none; }
+    body .toolbar[data-element-selected='true'] .no-element-selected {
+      display: none; }
+    body .toolbar[data-element-selected='true'] .edit-options {
+      display: block; }
+    body .toolbar button[value='delete'] {
+      background-color: #dc3545;
+      border-color: #dc3545; }
+    body .toolbar button[value='export'] {
+      background-color: #385bdc;
+      border-color: #385bdc;
+      margin-left: auto;
+      max-height: 2.25rem; }
+    body .toolbar .btn-group {
+      display: inline-block; }
+      body .toolbar .btn-group button {
+        border-radius: 0;
+        margin: 0.3rem -1px 0.3rem 0; }
+      body .toolbar .btn-group button:first-of-type {
+        border-left: none;
+        border-top-left-radius: 7px;
+        border-bottom-left-radius: 7px;
+        margin-left: 0.3rem;
+        padding-right: 0.85rem; }
+      body .toolbar .btn-group button:last-of-type {
+        border-right: none;
+        border-top-right-radius: 7px;
+        border-bottom-right-radius: 7px;
+        margin-right: 0.3rem;
+        padding-left: 0.85rem; }
+  body main.flex-item {
+    padding: 0;
+    outline: none; }
+  body .status {
+    background-color: #303030; }
+    body .status span {
+      padding-left: 0.8rem; }
+      body .status span button {
+        line-height: 2.5rem;
+        border: none;
+        padding: 0;
+        margin: 0;
+        background: none;
+        color: #fff;
+        padding: 0 0.4rem;
+        margin: 0 -0.4rem;
+        cursor: pointer; }
+        body .status span button:active, body .status span button:focus {
+          outline: none;
+          background: rgba(255, 255, 255, 0.115); }
+    body .status span + span {
+      color: #fff;
+      position: relative;
+      padding-left: 1.4rem; }
+      body .status span + span:empty {
+        display: none; }
+      body .status span + span:before {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 4px;
+        background-image: url(/chevron-right.svg);
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: 100% auto;
+        height: 10px;
+        width: 10px;
+        opacity: 0.7; }
+  body > .flex-item {
+    border: none;
+    height: 100%;
+    width: 100%; }
+  body .flex-item {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    position: relative;
+    box-sizing: border-box;
+    background: #fff;
+    outline: dashed 1px rgba(0, 0, 0, 0.4);
+    outline-offset: 0;
+    z-index: 1;
+    min-width: 4px;
+    min-height: 4px; }
+    body .flex-item:hover {
+      outline-color: rgba(0, 0, 0, 0.6);
+      outline-width: 1px;
+      outline-offset: 0;
+      z-index: 2; }
+    body .flex-item.editing {
+      outline-color: rgba(0, 0, 0, 0.9);
+      outline-width: 3px;
+      outline-offset: -2px;
+      z-index: 3; }
