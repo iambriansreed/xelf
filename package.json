@@ -22,6 +22,6 @@
     },
     "homepage": "https://github.com/iambriansreed/xelf#readme",
     "dependencies": {
-        "node-sass": "^4.12.0"
+        "node-sass": "^4.14.1"
     }
 }
