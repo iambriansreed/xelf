@@ -9,11 +9,8 @@ interface Field {
     element: HTMLInputElement;
     onChange?: (event: Event, element: HTMLInputElement) => void;
     onClick?: (event: MouseEvent, element: HTMLElement) => void;
-    onUpdateItem?: (element: HTMLInputElement) => void;
-    showIfBase?: boolean;
+    onUpdateItem?: (field: HTMLElement | HTMLInputElement) => void;
 }
-
-const baseId = 'base';
 
 class App {
     $addChildBtn: any;
@@ -32,6 +29,9 @@ class App {
     };
 
     private $item: HTMLElement = null;
+    get itemIsBase() {
+        return this.$item.isSameNode(this.$base);
+    }
 
     private $toolbar: HTMLElement;
     private $status: HTMLElement;
@@ -57,29 +57,33 @@ class App {
 
                 this.$item.style.flexDirection = element.value;
             },
-            onUpdateItem: (element: HTMLInputElement) => {
+            onUpdateItem: (field) => {
                 const value = this.$item.style.flexDirection || 'row';
 
-                element.style.display =
-                    this.$item.childNodes.length > 0 ? '' : 'none';
-
-                toArray(element.childNodes).forEach((el) => {
+                toArray(field.childNodes).forEach((el) => {
                     el.removeAttribute && el.removeAttribute('data-selected');
                 });
 
-                element
+                field
                     .querySelector(`[value="${value}"]`)
                     .setAttribute('data-selected', '');
+
+                const display =
+                    this.itemIsBase || this.$item.childNodes.length > 0
+                        ? ''
+                        : 'none';
+
+                field.style.display = display;
             },
-            showIfBase: true,
         },
         {
             element: document.querySelector(`[name="flexGrow"]`),
             onChange: (_, element: HTMLInputElement) => {
                 this.$item.style.flexGrow = element.value;
             },
-            onUpdateItem: (element: HTMLInputElement) => {
-                element.value = this.$item.style.flexGrow;
+            onUpdateItem: (field: HTMLInputElement) => {
+                field.value = this.$item.style.flexGrow;
+                field.style.display = this.itemIsBase ? 'none' : '';
             },
         },
         {
@@ -89,8 +93,9 @@ class App {
                 this.$item.style.flexBasis = element.value;
                 this.$item.style.flexDirection = flexDirection;
             },
-            onUpdateItem: (element: HTMLInputElement) => {
-                element.value = this.$item.style.flexBasis;
+            onUpdateItem: (field: HTMLInputElement) => {
+                field.value = this.$item.style.flexBasis;
+                field.style.display = this.itemIsBase ? 'none' : '';
             },
         },
         {
@@ -98,8 +103,9 @@ class App {
             onChange: (_, element: HTMLInputElement) => {
                 this.$item.dataset.classname = element.value;
             },
-            onUpdateItem: (element: HTMLInputElement) => {
-                element.value = this.$item.dataset.classname || '';
+            onUpdateItem: (field: HTMLInputElement) => {
+                field.value = this.$item.dataset.classname || '';
+                field.style.display = this.itemIsBase ? 'none' : '';
             },
         },
     ];
@@ -109,7 +115,7 @@ class App {
 
         this.$toolbar = document.getElementById('toolbar');
         this.$status = document.getElementById('status');
-        this.$base = document.getElementById(baseId);
+        this.$base = document.getElementById('base');
         this.$addChildBtn = this.$toolbar.querySelector(
             'button[value="add-child"]'
         );
@@ -125,7 +131,7 @@ class App {
     }
 
     deleteItemToEdit = () => {
-        if (this.$item.id === baseId) {
+        if (this.itemIsBase) {
             return;
         }
         const other =
@@ -144,9 +150,9 @@ class App {
             return;
 
         this.$item = _itemToEdit as HTMLElement;
-        const isBase = this.$item.id === baseId;
+        const isBase = this.itemIsBase;
 
-        toArray(document.querySelectorAll('.' + flexItem)).map((node) =>
+        toArray(document.getElementsByClassName(flexItem)).map((node) =>
             node.classList.remove('editing')
         );
 
@@ -159,9 +165,8 @@ class App {
 
         this.$toolbar.dataset.elementSelected = 'true';
 
-        this.$fields.forEach(({ element, onUpdateItem, showIfBase }) => {
-            element.style.display = showIfBase ? '' : hideIfBase;
-            onUpdateItem && onUpdateItem(element);
+        this.$fields.forEach(({ element: field, onUpdateItem }) => {
+            onUpdateItem && onUpdateItem(field);
         });
 
         this.updateStatus();
@@ -174,7 +179,7 @@ class App {
         let isBase: boolean;
 
         do {
-            isBase = pathElement.id === baseId;
+            isBase = pathElement.isSameNode(this.$base);
 
             pathSections.push({
                 name: pathElement.dataset.classname || 'element',
@@ -268,20 +273,16 @@ class App {
             }
         });
 
-        document.addEventListener('click', (event) => {
+        this.$base.addEventListener('click', (event) => {
             const eventTarget = event.target as HTMLElement;
-
             if (eventTarget.classList.contains(flexItem)) {
                 this.setItemToEdit(event.target);
-            } else {
-                // console.log(event);
             }
         });
 
         document.addEventListener('keydown', (event) => {
             const key = event.keyCode || event.charCode;
             if (this.keyMaps[key]) this.keyMaps[key]();
-            // else console.log(key);
         });
     };
 }
@@ -311,6 +312,7 @@ function getSiblings(element: HTMLElement) {
 }
 
 function getIndex(element: HTMLElement) {
+    if (!element.parentNode) return 0;
     return toArray(element.parentNode.childNodes).indexOf(element);
 }
 

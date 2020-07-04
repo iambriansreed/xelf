@@ -26,7 +26,8 @@ body {
     .toolbar {
         width: 100%;
         box-sizing: border-box;
-        padding: 0.25rem;
+        padding: 0.25rem 0.25rem 0.35rem;
+        border-bottom: grey;
         background-color: rgba(0, 0, 0, 0.4);
         color: #fff;
         font-size: 0;
@@ -179,12 +180,6 @@ body {
         }
     }
 
-    main.flex-item {
-        @extend %checker-background;
-        padding: 0;
-        outline: none;
-    }
-
     .status {
         background-color: #303030;
         span {
@@ -231,10 +226,9 @@ body {
         }
     }
 
-    & > .flex-item {
-        border: none;
-        height: 100%;
-        width: 100%;
+    main.flex-item {
+        @extend %checker-background;
+        padding: 0;
     }
 
     .flex-item {
@@ -259,7 +253,16 @@ body {
             outline-color: rgba(0, 0, 0, 0.9);
             outline-width: 3px;
             outline-offset: -2px;
-            z-index: 3;
+            z-index: 5;
+        }
+    }
+
+    & > .flex-item {
+        border: none;
+        height: 100%;
+        width: 100%;
+        &.editing {
+            outline-offset: 0;
         }
     }
 }

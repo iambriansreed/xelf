@@ -3,7 +3,6 @@ const DEFAULT_STYLE = {
     flexDirection: 'row',
     flexGrow: '1',
 };
-const baseId = 'base';
 class App {
     constructor() {
         this.keyMaps = {
@@ -25,26 +24,28 @@ class App {
                     this.$item.classList.remove('flex-direction-row', 'flex-direction-column');
                     this.$item.style.flexDirection = element.value;
                 },
-                onUpdateItem: (element) => {
+                onUpdateItem: (field) => {
                     const value = this.$item.style.flexDirection || 'row';
-                    element.style.display =
-                        this.$item.childNodes.length > 0 ? '' : 'none';
-                    toArray(element.childNodes).forEach((el) => {
+                    toArray(field.childNodes).forEach((el) => {
                         el.removeAttribute && el.removeAttribute('data-selected');
                     });
-                    element
+                    field
                         .querySelector(`[value="${value}"]`)
                         .setAttribute('data-selected', '');
+                    const display = this.itemIsBase || this.$item.childNodes.length > 0
+                        ? ''
+                        : 'none';
+                    field.style.display = display;
                 },
-                showIfBase: true,
             },
             {
                 element: document.querySelector(`[name="flexGrow"]`),
                 onChange: (_, element) => {
                     this.$item.style.flexGrow = element.value;
                 },
-                onUpdateItem: (element) => {
-                    element.value = this.$item.style.flexGrow;
+                onUpdateItem: (field) => {
+                    field.value = this.$item.style.flexGrow;
+                    field.style.display = this.itemIsBase ? 'none' : '';
                 },
             },
             {
@@ -54,8 +55,9 @@ class App {
                     this.$item.style.flexBasis = element.value;
                     this.$item.style.flexDirection = flexDirection;
                 },
-                onUpdateItem: (element) => {
-                    element.value = this.$item.style.flexBasis;
+                onUpdateItem: (field) => {
+                    field.value = this.$item.style.flexBasis;
+                    field.style.display = this.itemIsBase ? 'none' : '';
                 },
             },
             {
@@ -63,13 +65,14 @@ class App {
                 onChange: (_, element) => {
                     this.$item.dataset.classname = element.value;
                 },
-                onUpdateItem: (element) => {
-                    element.value = this.$item.dataset.classname || '';
+                onUpdateItem: (field) => {
+                    field.value = this.$item.dataset.classname || '';
+                    field.style.display = this.itemIsBase ? 'none' : '';
                 },
             },
         ];
         this.deleteItemToEdit = () => {
-            if (this.$item.id === baseId) {
+            if (this.itemIsBase) {
                 return;
             }
             const other = this.$item.nextSibling ||
@@ -83,16 +86,15 @@ class App {
                 !_itemToEdit.classList.contains(flexItem))
                 return;
             this.$item = _itemToEdit;
-            const isBase = this.$item.id === baseId;
-            toArray(document.querySelectorAll('.' + flexItem)).map((node) => node.classList.remove('editing'));
+            const isBase = this.itemIsBase;
+            toArray(document.getElementsByClassName(flexItem)).map((node) => node.classList.remove('editing'));
             this.$item.classList.add('editing');
             const hideIfBase = isBase ? 'none' : '';
             this.$deleteBtn.style.display = hideIfBase;
             this.$parentBtn.style.display = hideIfBase;
             this.$toolbar.dataset.elementSelected = 'true';
-            this.$fields.forEach(({ element, onUpdateItem, showIfBase }) => {
-                element.style.display = showIfBase ? '' : hideIfBase;
-                onUpdateItem && onUpdateItem(element);
+            this.$fields.forEach(({ element: field, onUpdateItem }) => {
+                onUpdateItem && onUpdateItem(field);
             });
             this.updateStatus();
         };
@@ -101,7 +103,7 @@ class App {
             let pathElement = this.$item;
             let isBase;
             do {
-                isBase = pathElement.id === baseId;
+                isBase = pathElement.isSameNode(this.$base);
                 pathSections.push({
                     name: pathElement.dataset.classname || 'element',
                     index: isBase ? null : getIndex(pathElement),
@@ -162,12 +164,10 @@ class App {
                     itemSelected && this.setItemToEdit(itemSelected);
                 }
             });
-            document.addEventListener('click', (event) => {
+            this.$base.addEventListener('click', (event) => {
                 const eventTarget = event.target;
                 if (eventTarget.classList.contains(flexItem)) {
                     this.setItemToEdit(event.target);
-                }
-                else {
                 }
             });
             document.addEventListener('keydown', (event) => {
@@ -178,7 +178,7 @@ class App {
         };
         this.$toolbar = document.getElementById('toolbar');
         this.$status = document.getElementById('status');
-        this.$base = document.getElementById(baseId);
+        this.$base = document.getElementById('base');
         this.$addChildBtn = this.$toolbar.querySelector('button[value="add-child"]');
         this.$parentBtn = this.$toolbar.querySelector('button[value="parent"]');
         this.$deleteBtn = this.$toolbar.querySelector('button[value="delete"]');
@@ -189,6 +189,9 @@ class App {
     }
     static initialize() {
         window.addEventListener('load', () => new this());
+    }
+    get itemIsBase() {
+        return this.$item.isSameNode(this.$base);
     }
 }
 App.initialize();
@@ -210,6 +213,8 @@ function getSiblings(element) {
     return toArray(element.parentNode.children).filter((child) => !element.isSameNode(child));
 }
 function getIndex(element) {
+    if (!element.parentNode)
+        return 0;
     return toArray(element.parentNode.childNodes).indexOf(element);
 }
 function styleToString(style) {
