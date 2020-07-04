@@ -58,6 +58,10 @@ body {
       width: 7rem; }
       body .toolbar input.sm {
         width: 3rem; }
+      body .toolbar input[type='number'].sm {
+        width: 4.5rem; }
+      body .toolbar input.md {
+        width: 5.5rem; }
     body .toolbar button {
       padding-left: 1.15rem;
       padding-right: 1.15rem;
@@ -177,7 +181,6 @@ body {
   body .flex-item {
     display: flex;
     flex-wrap: wrap;
-    flex: 1;
     position: relative;
     box-sizing: border-box;
     background: #fff;

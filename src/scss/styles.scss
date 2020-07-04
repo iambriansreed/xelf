@@ -57,6 +57,14 @@ body {
             &.sm {
                 width: 3rem;
             }
+
+            &[type='number'].sm {
+                width: 4.5rem;
+            }
+
+            &.md {
+                width: 5.5rem;
+            }
         }
 
         button {
@@ -234,7 +242,6 @@ body {
     .flex-item {
         display: flex;
         flex-wrap: wrap;
-        flex: 1;
         position: relative;
         box-sizing: border-box;
         background: #fff;

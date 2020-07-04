@@ -51,12 +51,30 @@ class App {
             {
                 element: document.querySelector(`[name="flexBasis"]`),
                 onChange: (_, element) => {
-                    const flexDirection = element.style.flexDirection;
                     this.$item.style.flexBasis = element.value;
-                    this.$item.style.flexDirection = flexDirection;
                 },
                 onUpdateItem: (field) => {
                     field.value = this.$item.style.flexBasis;
+                    field.style.display = this.itemIsBase ? 'none' : '';
+                },
+            },
+            {
+                element: document.querySelector(`[name="height"]`),
+                onChange: (_, element) => {
+                    this.$item.style.height = element.value;
+                },
+                onUpdateItem: (field) => {
+                    field.value = this.$item.style.height;
+                    field.style.display = this.itemIsBase ? 'none' : '';
+                },
+            },
+            {
+                element: document.querySelector(`[name="width"]`),
+                onChange: (_, element) => {
+                    this.$item.style.width = element.value;
+                },
+                onUpdateItem: (field) => {
+                    field.value = this.$item.style.width;
                     field.style.display = this.itemIsBase ? 'none' : '';
                 },
             },
@@ -146,12 +164,13 @@ class App {
                 event.stopPropagation();
             });
             this.$exportBtn.addEventListener('click', () => {
-                const str = `<div style="${this.$base.getAttribute('style')}">` +
+                const baseStyle = this.$base.getAttribute('style');
+                const str = (`<div style="${baseStyle}">` +
                     this.$base.innerHTML
                         .replace(/ class="[^"]+"/g, '')
                         .replace(/ data-ref="[^"]+"/g, '')
                         .replace(/>/g, '>\n') +
-                    `</div>`;
+                    `</div>`).replace(/ style="/g, 'style="display:flex;flex-wrap:wrap;');
                 const container = document.querySelector('textarea[data-copy-pasta]');
                 container.innerHTML = str;
                 container.select();
